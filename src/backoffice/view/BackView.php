@@ -11,25 +11,37 @@ class BackView extends \mf\view\AbstractView
 
     protected function renderBody($selector)
     {
-        $html = $this->renderHeader();
+        $html = '';
         switch ($selector){
             case 'accueil':
+                $html = $this->renderHeader();
                 $html .= $this->renderLogin();
                 break;
+            case 'tdb':
+                $html = $this->renderHeaderProd();
+                $html .= $this->renderTDB();
         }
         return $html;
     }
 
-    protected function renderHeader(){
+    private function renderHeader(){
+        return "
+            <header>
+                <div>
+                    <h1>LeHangar.local 🥕</h1>
+                </div>
+            </header>
+        ";
+    }
+
+    private function renderHeaderProd(){
         return "
             <header>
                 <div>
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <a href=''>Accueil</a>
-                    <a href=''>Producteurs</a>
-                    <a href=''>Panier</a>
+                    <p>Deconnexion</p>
                 </nav>
             </header>
         ";
@@ -41,10 +53,29 @@ class BackView extends \mf\view\AbstractView
                     <div>
                         <form action='../check_login/' method='post'>
                                 Username : <input type='text' name='username' required>
-                                Mot de passe : <input type='password' name='mdp' required>                  
+                                Mot de passe : <input type='password' name='mdp'>                  
                             <button type='submit'>Valider</button>
                         </form>
                     </div>
+                </div>";
+    }
+
+    public function renderTDB(){
+        foreach ($this->data->products as $product){
+            echo $product->nom;
+        }
+        return "<div>
+                    <div>
+                        <p>Nombre total d'article : </p>
+                        <p>Prix total : </p>                    
+                    </div>
+                    <section>
+                                               
+                    </section>
+
+
+
+    
                 </div>";
     }
 }

@@ -7,7 +7,8 @@ abstract class AbstractAuthentification {
     /* une constante pour le niveau le plus bas */
     const ACCESS_LEVEL_NONE = -9999; 
   
-    /* l'identifiant de l'utilisateur connecté */ 
+    /* l'identifiant de l'utilisateur connecté */
+    const ACCESS_LEVEL_PROD = 100;
     protected $user_login   = null;
 
     /* son niveau d'accès */

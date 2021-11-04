@@ -1,5 +1,6 @@
 <?php
 
+use backoffice\model\Producteur;
 use mf\router\Router;
 use mf\utils\ClassLoader;
 use \mf\auth\Authentification;
@@ -27,5 +28,7 @@ session_start();
 $r = new Router();
 $r->addRoute('accueil', '/accueil/', '\backoffice\control\BackController', 'viewAccueil',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
 $r->addRoute('check_login', '/check_login/', '\backoffice\control\BackController', 'checklogin',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
+$r->addRoute('tableau_de_bord', '/tableau_de_bord/', '\backoffice\control\BackController', 'viewTDB',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_PROD);
 $r->setDefaultRoute('/accueil/');
+
 $r->run();

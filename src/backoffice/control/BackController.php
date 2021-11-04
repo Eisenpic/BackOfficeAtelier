@@ -3,6 +3,7 @@
 namespace backoffice\control;
 
 use backoffice\auth\BackAuth;
+use backoffice\model\Producteur;
 use backoffice\view\BackView;
 use mf\auth\exception\AuthentificationException;
 use mf\control\AbstractController;
@@ -26,8 +27,16 @@ class BackController extends AbstractController
         try {
             $backauth = new BackAuth();
             $backauth->loginUser($username, $mdp);
+            Router::executeRoute('tableau_de_bord');
         } catch (AuthentificationException $e){
             Router::executeRoute('accueil');
+            echo "aled";
         }
+    }
+
+    public function viewTDB(){
+        $prod = Producteur::where('username','=',$_SESSION['user_login'])->first();
+        $view = new BackView($prod);
+        $view->render('tdb');
     }
 }
