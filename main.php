@@ -22,7 +22,10 @@ $db->addConnection($config);
 $db->setAsGlobal();
 $db->bootEloquent();
 
+session_start();
+
 $r = new Router();
 $r->addRoute('accueil', '/accueil/', '\backoffice\control\BackController', 'viewAccueil',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
+$r->addRoute('check_login', '/check_login/', '\backoffice\control\BackController', 'checklogin',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
 $r->setDefaultRoute('/accueil/');
 $r->run();

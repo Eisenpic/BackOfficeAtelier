@@ -1,6 +1,6 @@
 <?php
 
-namespace lehangar\model;
+namespace backoffice\model;
 
 
 use Illuminate\Database\Eloquent\Model;

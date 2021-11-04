@@ -39,7 +39,7 @@ class BackView extends \mf\view\AbstractView
         return "<div>
                     <h2>Connexion</h2>
                     <div>
-                        <form action='../connexion/' method='post'>
+                        <form action='../check_login/' method='post'>
                                 Username : <input type='text' name='username' required>
                                 Mot de passe : <input type='password' name='mdp' required>                  
                             <button type='submit'>Valider</button>
