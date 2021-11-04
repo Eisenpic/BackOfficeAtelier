@@ -61,21 +61,24 @@ class BackView extends \mf\view\AbstractView
     }
 
     public function renderTDB(){
+        $compteur = 0;
+        $total = 0;
         foreach ($this->data->products as $product){
-            echo $product->nom;
+            $compteur++;
+            $total += $product->tarif_unitaire;
         }
-        return "<div>
+        $html = "<div>
                     <div>
-                        <p>Nombre total d'article : </p>
-                        <p>Prix total : </p>                    
-                    </div>
-                    <section>
-                                               
-                    </section>
-
-
-
-    
-                </div>";
+                        <p>Nombre total d'article : $compteur</p>
+                        <p>Prix total : $total €</p>                    
+                    </div>";
+        foreach($this->data->products as $product){
+            $html .= "<section>
+                         <p>$product->nom</p>
+                         <p>Quantitée :". $this->data->howMuchOf($product)."</p>
+                       </section>";
+        }
+        $html .="</div>";
+        return $html;
     }
 }
