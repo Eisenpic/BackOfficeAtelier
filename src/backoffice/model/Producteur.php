@@ -19,7 +19,6 @@ class Producteur extends Model {
         $compteur = 0;
         $prod = $product->id;
         $commande = Contenu::where('prod_id','=',$prod)->get();
-        var_dump($commande);
         foreach ($commande as $com){
             $compteur += $com->quantite;
         }
