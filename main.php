@@ -1,5 +1,6 @@
 <?php
 
+use mf\router\Router;
 use mf\utils\ClassLoader;
 use \mf\auth\Authentification;
 
@@ -21,7 +22,7 @@ $db->addConnection($config);
 $db->setAsGlobal();
 $db->bootEloquent();
 
-$r = new \mf\router\Router();
-//$r->addRoute('view', '/view/', '\lehangar\control\HangarController', 'viewArticle', Authentification::ACCESS_LEVEL_NONE);
-//$r->setDefaultRoute('/accueil/');
-//$r->run();
+$r = new Router();
+$r->addRoute('accueil', '/accueil/', '\backoffice\control\BackController', 'viewAccueil',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
+$r->setDefaultRoute('/accueil/');
+$r->run();
