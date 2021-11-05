@@ -3,6 +3,7 @@
 namespace backoffice\view;
 
 use backoffice\model\Commande;
+use backoffice\model\Contenu;
 use backoffice\model\Producteur;
 use backoffice\model\Produit;
 use mf\router\Router;
@@ -137,8 +138,30 @@ class BackView extends \mf\view\AbstractView
                         <p>Chiffre d'affaire global : $ca</p>
                     </div>
                     <div>
-                        <p>CA par producteur</p>
-                    </div>
+                        <p>CA par producteur</p>";
+        $ca = 0;
+        // Parcour du tableau de Producteur
+        foreach (Producteur::get() as $prod){
+            if($prod->nom != 'admin') {
+                $nameprod = $prod->nom;
+                $html .= "<p> $nameprod </p>";
+                // Parcours de tableau de contenue qui décris les articles acheté
+                foreach (Contenu::get() as $commande) {
+                    $numprod = $commande->prod_id;
+                    // Récupération des produits par id de producteur
+                    $produit = Produit::where('id', '=', $numprod)->first();
+                    // On compare le numéro du producteur avec le numéro que le produit connait ( son producteur )
+                    if ($produit->prod_id == $prod->id) {
+                        $ca += $produit->tarif_unitaire * $commande->quantite;
+                    }
+                }
+                // Ajout du $ca et reset pour le prochain producteur
+                $html .= "<p> $ca </p>";
+                $ca = 0;
+            }
+        }
+
+        $html .= "</div>
                 </div>";
         return $html;
     }
