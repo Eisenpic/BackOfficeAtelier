@@ -18,6 +18,7 @@ class BackController extends AbstractController
 
     public function viewAccueil(){
         $view = new BackView("");
+        $view->addStyleSheet('/html/css/login.css');
         $view->render('accueil');
     }
 
@@ -43,6 +44,7 @@ class BackController extends AbstractController
     public function viewTDB(){
         $prod = Producteur::where('username','=',$_SESSION['user_login'])->first();
         $view = new BackView($prod);
+        $view->addStyleSheet('/html/css/homeprod.css');
         $view->render('tdb');
     }
 
