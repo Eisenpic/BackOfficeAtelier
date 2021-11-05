@@ -1,5 +1,7 @@
 <?php
 
+use backoffice\model\Producteur;
+use mf\router\Router;
 use mf\utils\ClassLoader;
 use \mf\auth\Authentification;
 
@@ -21,7 +23,15 @@ $db->addConnection($config);
 $db->setAsGlobal();
 $db->bootEloquent();
 
-$r = new \mf\router\Router();
-//$r->addRoute('view', '/view/', '\lehangar\control\HangarController', 'viewArticle', Authentification::ACCESS_LEVEL_NONE);
-//$r->setDefaultRoute('/accueil/');
-//$r->run();
+session_start();
+
+$r = new Router();
+$r->addRoute('accueil', '/accueil/', '\backoffice\control\BackController', 'viewAccueil',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
+$r->addRoute('check_login', '/check_login/', '\backoffice\control\BackController', 'checklogin',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
+$r->addRoute('tableau_de_bord', '/tableau_de_bord/', '\backoffice\control\BackController', 'viewTDB',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_PROD);
+$r->addRoute('admin_panel', '/admin_panel/', '\backoffice\control\BackController', 'viewAdminPanel',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
+$r->addRoute('liste', '/liste/', '\backoffice\control\BackController', 'viewList', \mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
+$r->setDefaultRoute('/accueil/');
+
+
+$r->run();
