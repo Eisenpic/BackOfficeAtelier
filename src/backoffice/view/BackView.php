@@ -51,7 +51,7 @@ class BackView extends \mf\view\AbstractView
                 <nav>
                     <a href=".$r->urlFor('admin_panel')."><p>Tableau de bord</p></a>
                     <a href=". $r->urlFor('liste') ."><p>Liste</p></a>
-                    <a href=". $r->urlFor('logout') .">Déconnexion</a>
+                    <a href=". $r->urlFor('logout') ."><p>Deconnexion</p></a>
                 </nav>
             </header>
         ";
