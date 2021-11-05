@@ -3,6 +3,7 @@
 namespace backoffice\control;
 
 use backoffice\auth\BackAuth;
+use backoffice\model\Commande;
 use backoffice\model\Producteur;
 use backoffice\view\BackView;
 use mf\auth\exception\AuthentificationException;
@@ -48,5 +49,11 @@ class BackController extends AbstractController
     public function viewAdminPanel(){
         $view = new BackView('');//Pour le moment
         $view->render('admin');
+    }
+
+    public function viewList(){
+        $allcommande = Commande::get();
+        $view = new BackView($allcommande);
+        $view->render('liste');
     }
 }

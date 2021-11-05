@@ -2,6 +2,11 @@
 
 namespace backoffice\view;
 
+use backoffice\model\Commande;
+use backoffice\model\Producteur;
+use backoffice\model\Produit;
+use mf\router\Router;
+
 class BackView extends \mf\view\AbstractView
 {
     public function __construct($data)
@@ -23,24 +28,26 @@ class BackView extends \mf\view\AbstractView
                 break;
             case 'admin':
                 $html = $this->renderHeaderAdmin();
+                $html .= $this->renderStat();
                 break;
             case 'liste':
                 $html = $this->renderHeaderAdmin();
-                $html .= '';
+                $html .= $this->renderList();
                 break;
         }
         return $html;
     }
 
     private function renderHeaderAdmin(){
+        $r = new Router();
         return "
             <header>
                 <div>
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <p>Tableau de bord</p>
-                    <p>Liste</p>
+                    <a href=".$r->urlFor('admin_panel')."><p>Tableau de bord</p></a>
+                    <a href=". $r->urlFor('liste') ."><p>Liste</p></a>
                     <p>Déconnexion</p>
                 </nav>
             </header>
@@ -83,7 +90,7 @@ class BackView extends \mf\view\AbstractView
                 </div>";
     }
 
-    public function renderTDB(){
+    private function renderTDB(){
         $compteur = 0;
         $total = 0;
         foreach ($this->data->products as $product){
@@ -103,5 +110,45 @@ class BackView extends \mf\view\AbstractView
         }
         $html .="</div>";
         return $html;
+    }
+
+    private function renderStat(){
+        $nbClient = Commande::distinct()->get(['tel_client'])->count();
+        $allcommande = Commande::get();
+        $ca = 0;
+        foreach ($allcommande as $com){
+            $ca += $com->montant;
+        }
+        $html = "<h2>Tableau de bord :</h2>
+                <div>
+                    <div>
+                        <p>Nombre de client : $nbClient</p>
+                        <p>Nombre de commandes : ". $allcommande->count() ."</p>
+                    </div>
+                    <div>
+                        <p>Chiffre d'affaire global : $ca</p>
+                    </div>
+                    <div>
+                        <p>CA par producteur</p>
+                    </div>
+                </div>";
+        return $html;
+    }
+
+    private function renderList(){
+        $html = '<div>
+                    <p>Liste des commandes : </p>
+                    <div>';
+        foreach($this->data as $commande) {
+            $html .= "<p>Nom du client : $commande->nom_client</p>
+                      <p>Montant : $commande->montant</p>
+                      <p>Etat : ";
+            $etat = ($commande->etat == 1) ? "Récuperé" : "Commandé";
+            $html .= "$etat </p>";
+        }
+        $html .= "</div>
+                 </div>";
+        return $html;
+
     }
 }
