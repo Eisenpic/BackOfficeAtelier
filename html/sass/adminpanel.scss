@@ -53,20 +53,19 @@ h2{
 
 
 
-@media screen and (max-width: 500px) {
-  section {
-    div {
-      margin-top: 50px;
-    }
-    div:first-child{
-      grid-column: 3 span;
-    }
-    div:nth-child(2){
-      grid-column: 3 span;
-    }
-    div:last-child{
-      background-color: white;
-      grid-column: 3 span;
+@media screen and (max-width: 800px) {
+  #bg {
+    section {
+      grid-row-gap: 20px;
+      div:first-child {
+        grid-column: 3 span;
+      }
+      div:nth-child(2) {
+        grid-column: 3 span;
+      }
+      div:last-child {
+        grid-column: 3 span;
+      }
     }
   }
 }

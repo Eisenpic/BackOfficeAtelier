@@ -49,28 +49,19 @@ class BackView extends \mf\view\AbstractView
     {
         $html = "<div>
                     <p>Detail de la commande n°" . $this->data->id . "</p>
-                </div>
-                <div>
-                    <div>
                         <h2>Client :</h2>
-                        <div>
                             <p>".$this->data->mail_client."</p>
                             <p>".$this->data->nom_client."</p>
                             <p>".$this->data->tel_client."</p>
-                        </div>
-                    </div>
-                    <div>
-                        <h2>Produits :</h2>
-                        <div>
-                            
-                        </div>
-                    </div>
-                    <div>
-                        <h2>Montant</h2>
-                        <div>
+                        <h2>Produits :</h2>";
+        foreach(Contenu::where('commande_id','=',$_GET['id'])->get() as $contenue) {
+            foreach (Produit::where('id','=',$contenue->prod_id)->get() as $prod) {
+                $html .= "<p>$contenue->quantite x $prod->nom | Prix unitaire : $prod->tarif_unitaire</p>";
+            }
+        }
+        $html .=            "<h2>Montant</h2>
                             <p>".$this->data->montant."</p>
-                        </div>
-                    </div>
+                </div>
                 </div>";
         return $html;
     }
@@ -232,7 +223,7 @@ class BackView extends \mf\view\AbstractView
                         <p>Etat : ";
             $etat = ($commande->etat == 1) ? "Récuperé" : "Commandé";
             $html .= "$etat </p>";
-            $html .= "<a href=" . $r->urlFor('validcommande', ['id' => $commande->id]) . ">Valider</a>";
+            $html .= "<a href=" . $r->urlFor('validcommande', ['id' => $commande->id]) . ">Valider</a><hr>";
         }
         $html .= "</a></div>
                  </div>

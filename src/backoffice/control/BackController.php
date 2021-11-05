@@ -79,6 +79,7 @@ class BackController extends AbstractController
         if(isset($_GET['id'])) {
             $commande = Commande::where('id', '=', $_GET['id'])->first();
             $view = new BackView($commande);
+            $view->addStyleSheet('/html/css/resumecommand.css');
             $view->render('commande');
         }
     }
