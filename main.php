@@ -29,6 +29,8 @@ $r = new Router();
 $r->addRoute('accueil', '/accueil/', '\backoffice\control\BackController', 'viewAccueil',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
 $r->addRoute('check_login', '/check_login/', '\backoffice\control\BackController', 'checklogin',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
 $r->addRoute('tableau_de_bord', '/tableau_de_bord/', '\backoffice\control\BackController', 'viewTDB',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_PROD);
+$r->addRoute('admin_panel', '/admin_panel/', '\backoffice\control\BackController', 'viewAdminPanel',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
 $r->setDefaultRoute('/accueil/');
+
 
 $r->run();

@@ -20,8 +20,16 @@ class BackView extends \mf\view\AbstractView
             case 'tdb':
                 $html = $this->renderHeaderProd();
                 $html .= $this->renderTDB();
+                break;
+            case 'adminpanel':
+                $hmtl = $this->renderHeaderAdmin();
+                break;
         }
         return $html;
+    }
+
+    private function renderHeaderAdmin(){
+        return 'wip';
     }
 
     private function renderHeader(){

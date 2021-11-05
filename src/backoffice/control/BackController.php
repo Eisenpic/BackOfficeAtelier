@@ -27,7 +27,12 @@ class BackController extends AbstractController
         try {
             $backauth = new BackAuth();
             $backauth->loginUser($username, $mdp);
-            Router::executeRoute('tableau_de_bord');
+            $user = Producteur::where('username','=', $username)->first();
+            if($user->level == 100){
+                Router::executeRoute('tableau_de_bord');
+            } else if($user->level == 999){
+                Router::executeRoute('admin_panel');
+            }
         } catch (AuthentificationException $e){
             Router::executeRoute('accueil');
             echo "aled";
@@ -38,5 +43,9 @@ class BackController extends AbstractController
         $prod = Producteur::where('username','=',$_SESSION['user_login'])->first();
         $view = new BackView($prod);
         $view->render('tdb');
+    }
+
+    public function viewAdminPanel(){
+        
     }
 }
