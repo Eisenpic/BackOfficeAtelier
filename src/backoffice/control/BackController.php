@@ -58,4 +58,9 @@ class BackController extends AbstractController
         $view = new BackView($allcommande);
         $view->render('liste');
     }
+
+    public function logout(){
+        $auth = new BackAuth();
+        $auth->logout();
+    }
 }

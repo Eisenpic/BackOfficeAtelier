@@ -48,9 +48,9 @@ class BackView extends \mf\view\AbstractView
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <a href=".$r->urlFor('admin_panel')."><p>Tableau de bord</p></a>
-                    <a href=". $r->urlFor('liste') ."><p>Liste</p></a>
-                    <p>Déconnexion</p>
+                    <a href=".$r->urlFor('admin_panel').">Tableau de bord</a>
+                    <a href=". $r->urlFor('liste') .">Liste</a>
+                    <a href=". $r->urlFor('logout') .">Déconnexion</a>
                 </nav>
             </header>
         ";
