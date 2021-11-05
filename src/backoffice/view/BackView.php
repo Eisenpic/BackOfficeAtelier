@@ -2,6 +2,9 @@
 
 namespace backoffice\view;
 
+use mf\router\Router;
+use mf\utils\HttpRequest;
+
 class BackView extends \mf\view\AbstractView
 {
     public function __construct($data)
@@ -25,6 +28,7 @@ class BackView extends \mf\view\AbstractView
                 $hmtl = $this->renderHeaderAdmin();
                 break;
         }
+        $html .= $this->renderFooter();
         return $html;
     }
 
@@ -43,13 +47,14 @@ class BackView extends \mf\view\AbstractView
     }
 
     private function renderHeaderProd(){
+        $r = new Router();
         return "
             <header>
                 <div>
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <p>Deconnexion</p>
+                    <a href=". $r->urlFor('accueil', []). ">Deconnexion</a>
                 </nav>
             </header>
         ";
@@ -60,9 +65,14 @@ class BackView extends \mf\view\AbstractView
                     <h2>Connexion</h2>
                     <div>
                         <form action='../check_login/' method='post'>
-                                Username : <input type='text' name='username' required>
-                                Mot de passe : <input type='password' name='mdp'>                  
-                            <button type='submit'>Valider</button>
+                                <div>
+                                Username : <input type='text' name='username' required></br>
+                                Mot de passe : <input type='password' name='mdp'></br>
+                                </div>       
+                                <div>    
+                                <button type='submit'>Valider</button>
+                                </div> 
+                            
                         </form>
                     </div>
                 </div>";
@@ -77,16 +87,28 @@ class BackView extends \mf\view\AbstractView
         }
         $html = "<div>
                     <div>
-                        <p>Nombre total d'article : $compteur</p>
-                        <p>Prix total : $total €</p>                    
+                        <p><b>Nombre total d'article :</b> $compteur</p>
+                        <p><b>Prix total : </b> $total €</p>                    
                     </div>";
         foreach($this->data->products as $product){
             $html .= "<section>
                          <p>$product->nom</p>
-                         <p>Quantitée :". $this->data->howMuchOf($product)."</p>
+                         <p><b>Quantitée : </b>". $this->data->howMuchOf($product)."</p>
                        </section>";
         }
         $html .="</div>";
         return $html;
+    }
+
+    protected function renderFooter()
+    {
+        $http_req = new HttpRequest();
+        return "
+            <footer>
+                <div>
+                    <img src='$http_req->root/html/img/wave.svg'>
+                </div>        
+            </footer>
+        ";
     }
 }
