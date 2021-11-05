@@ -82,7 +82,9 @@ class BackView extends \mf\view\AbstractView
     }
 
     private function renderLogin() {
-        return "<div>
+        return "
+            <section id='bg'>
+                <div>
                     <h2>Connexion</h2>
                     <div>
                         <form action='../check_login/' method='post'>
@@ -96,7 +98,8 @@ class BackView extends \mf\view\AbstractView
                             
                         </form>
                     </div>
-                </div>";
+                </div>
+            </section>";
     }
 
     private function renderTDB(){
@@ -106,7 +109,9 @@ class BackView extends \mf\view\AbstractView
             $compteur++;
             $total += $product->tarif_unitaire;
         }
-        $html = "<div>
+        $html = "
+            <section id=bg>
+                <div>
                     <div>
                         <p><b>Nombre total d'article :</b> $compteur</p>
                         <p><b>Prix total : </b> $total €</p>                    
@@ -117,7 +122,8 @@ class BackView extends \mf\view\AbstractView
                          <p><b>Quantitée : </b>". $this->data->howMuchOf($product)."</p>
                        </section>";
         }
-        $html .="</div>";
+        $html .="</div>
+</section>";
         return $html;
     }
 
@@ -128,14 +134,19 @@ class BackView extends \mf\view\AbstractView
         foreach ($allcommande as $com){
             $ca += $com->montant;
         }
-        $html = "<h2>Tableau de bord :</h2>
+        $html = "<section id='bg'>
                 <div>
+                    <h2>Tableau de bord :</h2>
+                    <section>
                     <div>
                         <p>Nombre de client : $nbClient</p>
                         <p>Nombre de commandes : ". $allcommande->count() ."</p>
                     </div>
                     <div>
-                        <p>Chiffre d'affaire global : $ca</p>
+                        <p>Chiffre d'affaire global :</p>
+                        <div>
+                            <p>$ca</p>
+                        </div>
                     </div>
                     <div>
                         <p>CA par producteur</p>";
@@ -167,8 +178,9 @@ class BackView extends \mf\view\AbstractView
     }
 
     private function renderList(){
-        $html = '<div>
-                    <p>Liste des commandes : </p>
+        $html = '<section id="bg">
+                   <div>
+                    <h1>Liste des commandes : </h1>
                     <div>';
         foreach($this->data as $commande) {
             $html .= "<p>Nom du client : $commande->nom_client</p>
@@ -178,7 +190,8 @@ class BackView extends \mf\view\AbstractView
             $html .= "$etat </p>";
         }
         $html .= "</div>
-                 </div>";
+                 </div>
+                 </section>";
         return $html;
     }
 

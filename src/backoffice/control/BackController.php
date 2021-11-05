@@ -50,12 +50,14 @@ class BackController extends AbstractController
 
     public function viewAdminPanel(){
         $view = new BackView('');//Pour le moment
+        $view->addStyleSheet('/html/css/adminpanel.css');
         $view->render('admin');
     }
 
     public function viewList(){
         $allcommande = Commande::get();
         $view = new BackView($allcommande);
+        $view->addStyleSheet('/html/css/adminlist.css');
         $view->render('liste');
     }
 
