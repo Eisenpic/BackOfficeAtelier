@@ -19,7 +19,7 @@ class BackView extends \mf\view\AbstractView
     protected function renderBody($selector)
     {
         $html = '';
-        switch ($selector){
+        switch ($selector) {
             case 'accueil':
                 $html = $this->renderHeader();
                 $html .= $this->renderLogin();
@@ -36,12 +36,47 @@ class BackView extends \mf\view\AbstractView
                 $html = $this->renderHeaderAdmin();
                 $html .= $this->renderList();
                 break;
+            case 'commande':
+                $html = $this->renderHeaderAdmin();
+                $html .= $this->renderCommande();
+                break;
         }
         $html .= $this->renderFooter();
         return $html;
     }
 
-    private function renderHeaderAdmin(){
+    private function renderCommande()
+    {
+        $html = "<div>
+                    <p>Detail de la commande n°" . $this->data->id . "</p>
+                </div>
+                <div>
+                    <div>
+                        <h2>Client :</h2>
+                        <div>
+                            <p>".$this->data->mail_client."</p>
+                            <p>".$this->data->nom_client."</p>
+                            <p>".$this->data->tel_client."</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Produits :</h2>
+                        <div>
+                            
+                        </div>
+                    </div>
+                    <div>
+                        <h2>Montant</h2>
+                        <div>
+                            <p>".$this->data->montant."</p>
+                        </div>
+                    </div>
+                </div>";
+        return $html;
+    }
+
+    private function renderHeaderAdmin()
+    {
         $r = new Router();
         return "
             <header>
@@ -49,15 +84,16 @@ class BackView extends \mf\view\AbstractView
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <a href=".$r->urlFor('admin_panel')."><p>Tableau de bord</p></a>
-                    <a href=". $r->urlFor('liste') ."><p>Liste</p></a>
-                    <a href=". $r->urlFor('logout') ."><p>Deconnexion</p></a>
+                    <a href=" . $r->urlFor('admin_panel') . "><p>Tableau de bord</p></a>
+                    <a href=" . $r->urlFor('liste') . "><p>Liste</p></a>
+                    <a href=" . $r->urlFor('logout') . "><p>Deconnexion</p></a>
                 </nav>
             </header>
         ";
     }
 
-    private function renderHeader(){
+    private function renderHeader()
+    {
         return "
             <header>
                 <div>
@@ -67,7 +103,8 @@ class BackView extends \mf\view\AbstractView
         ";
     }
 
-    private function renderHeaderProd(){
+    private function renderHeaderProd()
+    {
         $r = new Router();
         return "
             <header>
@@ -75,13 +112,14 @@ class BackView extends \mf\view\AbstractView
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <a href=". $r->urlFor('logout'). ">Deconnexion</a>
+                    <a href=" . $r->urlFor('logout') . ">Deconnexion</a>
                 </nav>
             </header>
         ";
     }
 
-    private function renderLogin() {
+    private function renderLogin()
+    {
         return "
             <section id='bg'>
                 <div>
@@ -102,10 +140,11 @@ class BackView extends \mf\view\AbstractView
             </section>";
     }
 
-    private function renderTDB(){
+    private function renderTDB()
+    {
         $compteur = 0;
         $total = 0;
-        foreach ($this->data->products as $product){
+        foreach ($this->data->products as $product) {
             $compteur++;
             $total += $product->tarif_unitaire;
         }
@@ -116,22 +155,23 @@ class BackView extends \mf\view\AbstractView
                         <p><b>Nombre total d'article :</b> $compteur</p>
                         <p><b>Prix total : </b> $total €</p>                    
                     </div>";
-        foreach($this->data->products as $product){
+        foreach ($this->data->products as $product) {
             $html .= "<section>
                          <p>$product->nom</p>
-                         <p><b>Quantitée : </b>". $this->data->howMuchOf($product)."</p>
+                         <p><b>Quantitée : </b>" . $this->data->howMuchOf($product) . "</p>
                        </section>";
         }
-        $html .="</div>
+        $html .= "</div>
 </section>";
         return $html;
     }
 
-    private function renderStat(){
+    private function renderStat()
+    {
         $nbClient = Commande::distinct()->get(['tel_client'])->count();
         $allcommande = Commande::get();
         $ca = 0;
-        foreach ($allcommande as $com){
+        foreach ($allcommande as $com) {
             $ca += $com->montant;
         }
         $html = "<section id='bg'>
@@ -140,7 +180,7 @@ class BackView extends \mf\view\AbstractView
                     <section>
                     <div>
                         <p>Nombre de client : $nbClient</p>
-                        <p>Nombre de commandes : ". $allcommande->count() ."</p>
+                        <p>Nombre de commandes : " . $allcommande->count() . "</p>
                     </div>
                     <div>
                         <p>Chiffre d'affaire global :</p>
@@ -152,8 +192,8 @@ class BackView extends \mf\view\AbstractView
                         <p>CA par producteur</p>";
         $ca = 0;
         // Parcour du tableau de Producteur
-        foreach (Producteur::get() as $prod){
-            if($prod->nom != 'admin') {
+        foreach (Producteur::get() as $prod) {
+            if ($prod->nom != 'admin') {
                 $nameprod = $prod->nom;
                 $html .= "<p> $nameprod </p>";
                 // Parcours de tableau de contenue qui décris les articles acheté
@@ -177,19 +217,24 @@ class BackView extends \mf\view\AbstractView
         return $html;
     }
 
-    private function renderList(){
+    private function renderList()
+    {
+        $r = new Router();
         $html = '<section id="bg">
                    <div>
                     <h1>Liste des commandes : </h1>
                     <div>';
-        foreach($this->data as $commande) {
-            $html .= "<p>Nom du client : $commande->nom_client</p>
-                      <p>Montant : $commande->montant</p>
-                      <p>Etat : ";
+        foreach ($this->data as $commande) {
+            $html .= "<a href=" . $r->urlFor('commande', ['id' => $commande->id]) . ">
+                        <div>
+                        <p>Nom du client : $commande->nom_client</p>
+                        <p>Montant : $commande->montant</p>
+                        <p>Etat : ";
             $etat = ($commande->etat == 1) ? "Récuperé" : "Commandé";
             $html .= "$etat </p>";
+            $html .= "<a href=" . $r->urlFor('validcommande', ['id' => $commande->id]) . ">Valider</a>";
         }
-        $html .= "</div>
+        $html .= "</a></div>
                  </div>
                  </section>";
         return $html;
