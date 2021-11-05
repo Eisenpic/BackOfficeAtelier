@@ -18,7 +18,7 @@ header {
   nav{
     width: 95%;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 
     a{
       text-decoration: none;
@@ -33,7 +33,8 @@ header {
     flex-direction: row;
 
     nav{
-      width: 320px;
+      width: 300px;
+      justify-content: right;
 
       a{
         font-size: 20px;
