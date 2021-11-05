@@ -21,15 +21,30 @@ class BackView extends \mf\view\AbstractView
                 $html = $this->renderHeaderProd();
                 $html .= $this->renderTDB();
                 break;
-            case 'adminpanel':
-                $hmtl = $this->renderHeaderAdmin();
+            case 'admin':
+                $html = $this->renderHeaderAdmin();
+                break;
+            case 'liste':
+                $html = $this->renderHeaderAdmin();
+                $html .= '';
                 break;
         }
         return $html;
     }
 
     private function renderHeaderAdmin(){
-        return 'wip';
+        return "
+            <header>
+                <div>
+                    <h1>LeHangar.local 🥕</h1>
+                </div>
+                <nav>
+                    <p>Tableau de bord</p>
+                    <p>Liste</p>
+                    <p>Déconnexion</p>
+                </nav>
+            </header>
+        ";
     }
 
     private function renderHeader(){

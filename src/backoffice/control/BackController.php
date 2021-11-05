@@ -46,6 +46,7 @@ class BackController extends AbstractController
     }
 
     public function viewAdminPanel(){
-        
+        $view = new BackView('');//Pour le moment
+        $view->render('admin');
     }
 }
