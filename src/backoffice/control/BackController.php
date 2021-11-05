@@ -60,4 +60,10 @@ class BackController extends AbstractController
         $view->addStyleSheet('/html/css/adminlist.css');
         $view->render('liste');
     }
+
+    public function logout(){
+        $back = new BackAuth();
+        $back->logout();
+        Router::executeRoute('accueil');
+    }
 }
