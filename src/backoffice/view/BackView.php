@@ -3,6 +3,7 @@
 namespace backoffice\view;
 
 use backoffice\model\Commande;
+use backoffice\model\Contenu;
 use backoffice\model\Producteur;
 use backoffice\model\Produit;
 use mf\router\Router;
@@ -18,7 +19,7 @@ class BackView extends \mf\view\AbstractView
     protected function renderBody($selector)
     {
         $html = '';
-        switch ($selector){
+        switch ($selector) {
             case 'accueil':
                 $html = $this->renderHeader();
                 $html .= $this->renderLogin();
@@ -35,12 +36,38 @@ class BackView extends \mf\view\AbstractView
                 $html = $this->renderHeaderAdmin();
                 $html .= $this->renderList();
                 break;
+            case 'commande':
+                $html = $this->renderHeaderAdmin();
+                $html .= $this->renderCommande();
+                break;
         }
         $html .= $this->renderFooter();
         return $html;
     }
 
-    private function renderHeaderAdmin(){
+    private function renderCommande()
+    {
+        $html = "<div>
+                    <p>Detail de la commande n°" . $this->data->id . "</p>
+                        <h2>Client :</h2>
+                            <p>".$this->data->mail_client."</p>
+                            <p>".$this->data->nom_client."</p>
+                            <p>".$this->data->tel_client."</p>
+                        <h2>Produits :</h2>";
+        foreach(Contenu::where('commande_id','=',$_GET['id'])->get() as $contenue) {
+            foreach (Produit::where('id','=',$contenue->prod_id)->get() as $prod) {
+                $html .= "<p>$contenue->quantite x $prod->nom | Prix unitaire : $prod->tarif_unitaire</p>";
+            }
+        }
+        $html .=            "<h2>Montant</h2>
+                            <p>".$this->data->montant."</p>
+                </div>
+                </div>";
+        return $html;
+    }
+
+    private function renderHeaderAdmin()
+    {
         $r = new Router();
         return "
             <header>
@@ -48,15 +75,16 @@ class BackView extends \mf\view\AbstractView
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <a href=".$r->urlFor('admin_panel')."><p>Tableau de bord</p></a>
-                    <a href=". $r->urlFor('liste') ."><p>Liste</p></a>
-                    <p>Déconnexion</p>
+                    <a href=" . $r->urlFor('admin_panel') . "><p>Tableau de bord</p></a>
+                    <a href=" . $r->urlFor('liste') . "><p>Liste</p></a>
+                    <a href=" . $r->urlFor('logout') . "><p>Deconnexion</p></a>
                 </nav>
             </header>
         ";
     }
 
-    private function renderHeader(){
+    private function renderHeader()
+    {
         return "
             <header>
                 <div>
@@ -66,7 +94,8 @@ class BackView extends \mf\view\AbstractView
         ";
     }
 
-    private function renderHeaderProd(){
+    private function renderHeaderProd()
+    {
         $r = new Router();
         return "
             <header>
@@ -74,14 +103,17 @@ class BackView extends \mf\view\AbstractView
                     <h1>LeHangar.local 🥕</h1>
                 </div>
                 <nav>
-                    <a href=". $r->urlFor('accueil', []). ">Deconnexion</a>
+                    <a href=" . $r->urlFor('logout') . ">Deconnexion</a>
                 </nav>
             </header>
         ";
     }
 
-    private function renderLogin() {
-        return "<div>
+    private function renderLogin()
+    {
+        return "
+            <section id='bg'>
+                <div>
                     <h2>Connexion</h2>
                     <div>
                         <form action='../check_login/' method='post'>
@@ -95,67 +127,107 @@ class BackView extends \mf\view\AbstractView
                             
                         </form>
                     </div>
-                </div>";
+                </div>
+            </section>";
     }
 
-    private function renderTDB(){
+    private function renderTDB()
+    {
         $compteur = 0;
         $total = 0;
-        foreach ($this->data->products as $product){
+        foreach ($this->data->products as $product) {
             $compteur++;
             $total += $product->tarif_unitaire;
         }
-        $html = "<div>
+        $html = "
+            <section id=bg>
+                <div>
                     <div>
                         <p><b>Nombre total d'article :</b> $compteur</p>
                         <p><b>Prix total : </b> $total €</p>                    
                     </div>";
-        foreach($this->data->products as $product){
+        foreach ($this->data->products as $product) {
             $html .= "<section>
                          <p>$product->nom</p>
-                         <p><b>Quantitée : </b>". $this->data->howMuchOf($product)."</p>
+                         <p><b>Quantitée : </b>" . $this->data->howMuchOf($product) . "</p>
                        </section>";
         }
-        $html .="</div>";
+        $html .= "</div>
+</section>";
         return $html;
     }
 
-    private function renderStat(){
+    private function renderStat()
+    {
         $nbClient = Commande::distinct()->get(['tel_client'])->count();
         $allcommande = Commande::get();
         $ca = 0;
-        foreach ($allcommande as $com){
+        foreach ($allcommande as $com) {
             $ca += $com->montant;
         }
-        $html = "<h2>Tableau de bord :</h2>
+        $html = "<section id='bg'>
                 <div>
+                    <h2>Tableau de bord :</h2>
+                    <section>
                     <div>
                         <p>Nombre de client : $nbClient</p>
-                        <p>Nombre de commandes : ". $allcommande->count() ."</p>
+                        <p>Nombre de commandes : " . $allcommande->count() . "</p>
                     </div>
                     <div>
-                        <p>Chiffre d'affaire global : $ca</p>
+                        <p>Chiffre d'affaire global :</p>
+                        <div>
+                            <p>$ca</p>
+                        </div>
                     </div>
                     <div>
-                        <p>CA par producteur</p>
-                    </div>
+                        <p>CA par producteur</p>";
+        $ca = 0;
+        // Parcour du tableau de Producteur
+        foreach (Producteur::get() as $prod) {
+            if ($prod->nom != 'admin') {
+                $nameprod = $prod->nom;
+                $html .= "<p> $nameprod </p>";
+                // Parcours de tableau de contenue qui décris les articles acheté
+                foreach (Contenu::get() as $commande) {
+                    $numprod = $commande->prod_id;
+                    // Récupération des produits par id de producteur
+                    $produit = Produit::where('id', '=', $numprod)->first();
+                    // On compare le numéro du producteur avec le numéro que le produit connait ( son producteur )
+                    if ($produit->prod_id == $prod->id) {
+                        $ca += $produit->tarif_unitaire * $commande->quantite;
+                    }
+                }
+                // Ajout du $ca et reset pour le prochain producteur
+                $html .= "<p> $ca </p>";
+                $ca = 0;
+            }
+        }
+
+        $html .= "</div>
                 </div>";
         return $html;
     }
 
-    private function renderList(){
-        $html = '<div>
-                    <p>Liste des commandes : </p>
+    private function renderList()
+    {
+        $r = new Router();
+        $html = '<section id="bg">
+                   <div>
+                    <h1>Liste des commandes : </h1>
                     <div>';
-        foreach($this->data as $commande) {
-            $html .= "<p>Nom du client : $commande->nom_client</p>
-                      <p>Montant : $commande->montant</p>
-                      <p>Etat : ";
+        foreach ($this->data as $commande) {
+            $html .= "<a href=" . $r->urlFor('commande', ['id' => $commande->id]) . ">
+                        <div>
+                        <p>Nom du client : $commande->nom_client</p>
+                        <p>Montant : $commande->montant</p>
+                        <p>Etat : ";
             $etat = ($commande->etat == 1) ? "Récuperé" : "Commandé";
             $html .= "$etat </p>";
+            $html .= "<a href=" . $r->urlFor('validcommande', ['id' => $commande->id]) . ">Valider</a><hr>";
         }
-        $html .= "</div>
-                 </div>";
+        $html .= "</a></div>
+                 </div>
+                 </section>";
         return $html;
     }
 

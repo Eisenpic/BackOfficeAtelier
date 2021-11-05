@@ -50,12 +50,37 @@ class BackController extends AbstractController
 
     public function viewAdminPanel(){
         $view = new BackView('');//Pour le moment
+        $view->addStyleSheet('/html/css/adminpanel.css');
         $view->render('admin');
     }
 
     public function viewList(){
         $allcommande = Commande::get();
         $view = new BackView($allcommande);
+        $view->addStyleSheet('/html/css/adminlist.css');
         $view->render('liste');
+    }
+
+    public function logout(){
+        $back = new BackAuth();
+        $back->logout();
+        Router::executeRoute('accueil');
+    }
+
+    public function validcommande() {
+        $id_com = $_GET['id'];
+        $commande = Commande::where('id','=',$id_com)->first();
+        $commande->etat = 1;
+        $commande->save();
+        Router::executeRoute('liste');
+    }
+
+    public function viewCommande(){
+        if(isset($_GET['id'])) {
+            $commande = Commande::where('id', '=', $_GET['id'])->first();
+            $view = new BackView($commande);
+            $view->addStyleSheet('/html/css/resumecommand.css');
+            $view->render('commande');
+        }
     }
 }
