@@ -66,4 +66,20 @@ class BackController extends AbstractController
         $back->logout();
         Router::executeRoute('accueil');
     }
+
+    public function validcommande() {
+        $id_com = $_GET['id'];
+        $commande = Commande::where('id','=',$id_com)->first();
+        $commande->etat = 1;
+        $commande->save();
+        Router::executeRoute('liste');
+    }
+
+    public function viewCommande(){
+        if(isset($_GET['id'])) {
+            $commande = Commande::where('id', '=', $_GET['id'])->first();
+            $view = new BackView($commande);
+            $view->render('commande');
+        }
+    }
 }

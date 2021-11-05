@@ -32,6 +32,8 @@ $r->addRoute('tableau_de_bord', '/tableau_de_bord/', '\backoffice\control\BackCo
 $r->addRoute('admin_panel', '/admin_panel/', '\backoffice\control\BackController', 'viewAdminPanel',\mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
 $r->addRoute('liste', '/liste/', '\backoffice\control\BackController', 'viewList', \mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
 $r->addRoute('logout', '/logout/', '\backoffice\control\BackController', 'logout', \mf\auth\AbstractAuthentification::ACCESS_LEVEL_NONE);
+$r->addRoute('validcommande', '/validcommande/', '\backoffice\control\BackController', 'validcommande', \mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
+$r->addRoute('commande', '/commande/', '\backoffice\control\BackController', 'viewCommande', \mf\auth\AbstractAuthentification::ACCESS_LEVEL_ADMIN);
 $r->setDefaultRoute('/accueil/');
 
 
